@@ -3,22 +3,35 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import json
 from pprint import pprint
+import math
 
 def parse_nodes_json(nodes_json):
-    nodes = []
     level = 0
     network_depth = len(nodes_json)
+    nodes_heirarchy = []
 
     for node_catagory_json in nodes_json:
+        nodes = []
         node_type = node_catagory_json.get("name")
         nodes_in_catagory = node_catagory_json.get("nodes")
         for node in nodes_in_catagory:
             nodes.append({"label":node, "level":level, "type":node_type})
+
+        nodes_heirarchy.append({level:nodes})
         level = level + 1
     
-    return nodes, network_depth
+    return nodes_heirarchy, network_depth
 
-
+def get_node_positions(nodes_heirarchy, network_depth, height, width):
+    origin_level = math.floor(network_depth/2)
+    for h in range(0,len(nodes_heirarchy)-1) :
+        level = nodes_heirarchy[h][h]
+        ypos = (origin_level - h) * height
+        mid_level = math.floor(len(level)/2)
+        for w in range(0,len(level)-1):
+            xpos = math.floor((w - mid_level)/2) + width
+            level[w]["pos"] = (xpos,ypos)
+    return nodes_heirarchy
 def get_weights():
     # Loading the sensory->inter adjacency matrix into a numpy arrays
     sensory2inter_adj_weights = np.loadtxt('datafiles/weights/sensorweights.dat', dtype=float)
@@ -73,11 +86,12 @@ def get_node_color(node_dict):
         return 0.12
 
 
-def build_network(nodes, network_depth, sensory2inter_adj_weights, inter2inter_adj_weights, inter2motor_adj_weights):
+def build_network(nodes_heirarchy, network_depth, sensory2inter_adj_weights, inter2inter_adj_weights, inter2motor_adj_weights):
+    nodes_heirarchy = get_node_positions(nodes_heirarchy=nodes_heirarchy,network_depth=network_depth,height=10,width=10)
     sensory_neuron_map, inter_neuron_map, motor_neuron_map = get_node_maps()
-    print(sensory_neuron_map)
-    print(inter_neuron_map)
-    print(motor_neuron_map)
+    #print(sensory_neuron_map)
+    #print(inter_neuron_map)
+    #print(motor_neuron_map)
     #sensor_neurons_nodes_list = [v.get('label') for k,v in sensory_neuron_map.items()]
     inter_neurons_nodes_list = [v.get('label') for k,v in inter_neuron_map.items()]
     motor_neurons_nodes_list = [v.get('label') for k,v in motor_neuron_map.items()]
@@ -142,10 +156,10 @@ def main():
     with open('datafiles/node_def/nodes.json') as json_file:
         node_def = json.load(json_file)
 
-    nodes, network_depth = parse_nodes_json(node_def)
+    nodes_heirarchy, network_depth = parse_nodes_json(node_def)
     sensory2inter_adj_weights, inter2inter_adj_weights, inter2motor_adj_weights = get_weights()
 
-    network_inputs = (nodes, network_depth, sensory2inter_adj_weights, inter2inter_adj_weights, inter2motor_adj_weights)
+    network_inputs = (nodes_heirarchy, network_depth, sensory2inter_adj_weights, inter2inter_adj_weights, inter2motor_adj_weights)
     build_network(*network_inputs)
 
 if __name__ == "__main__":
