@@ -101,6 +101,7 @@ def build_network(nodes_heirarchy, network_depth, sensory2inter_adj_weights, int
 
     G = nx.Graph()
     #pos = nx.random_layout(G)  # positions for all nodes
+    
 
     #networkx nodes
     options = {"node_size": 500, "alpha": 0.8}
