@@ -1,5 +1,0 @@
-[
-{"nodes":[1,2,3,4,5,6,7], "name":"sensory"},
-{"nodes":[8,9,10,11,12], "name":"inter"},
-{"nodes":[13,14], "name":"motor"}
-]
