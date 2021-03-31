@@ -6,8 +6,8 @@ from pprint import pprint
 import math
 import pandas as pd
 from networkx.readwrite import json_graph
-from networkx.drawing.nx_agraph import to_agraph
-import graphviz
+#from networkx.drawing.nx_agraph import to_agraph
+#import graphviz
 
 ###
 #Parse the nodes json under 'datafiles/nodes.json' that contains infromation of the level name and nodes in each level
@@ -144,8 +144,8 @@ def build_network(nodes_heirarchy, all_nodes, network_depth, complete_adjacency_
     # converting to set to get unique values of levels and then converting it back to list of all unique levels
     all_levels = list(set([node['level'] for node in all_nodes]))
 
+    # a separate graph for interneurons
     for level in all_levels:
-        # a separate graph for interneurons
         has_same_level_graphs = False
         all_nodes_in_level = [node['label'] for node in all_nodes if node['level']==level]
         for node1 in all_nodes_in_level:
