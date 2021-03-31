@@ -122,7 +122,7 @@ def build_network(nodes_heirarchy, all_nodes, network_depth, complete_adjacency_
             if not math.isnan(edge_weight): #if there is a value in the complete adj matrix for the edge
                 edge_sign = '+' if edge_weight >=0 else '-'
                 #edge_color = 'b' if edge_sign == '+' else "g"
-                edge_color = 1 if edge_sign == '+' else 0.8
+                edge_color = 0.8 if edge_sign == '+' else 1
                 abs_edge_weight = abs(edge_weight)
                 G.add_edge(node1_label,node2_label,color=edge_color, weight=abs_edge_weight, alpha=0.5)
             
@@ -141,14 +141,11 @@ def build_network(nodes_heirarchy, all_nodes, network_depth, complete_adjacency_
 
     # converting to set to get unique values of levels and then converting it back to list of all unique levels
     all_levels = list(set([node['level'] for node in all_nodes]))
-    print(all_levels)
-
 
     for level in all_levels:
         # a separate graph for interneurons
         has_same_level_graphs = False
         all_nodes_in_level = [node['label'] for node in all_nodes if node['level']==level]
-        print(all_nodes_in_level)
         for node1 in all_nodes_in_level:
             for node2 in all_nodes_in_level:
                 edge_weight = complete_adjacency_matrix.loc[node1,node2]
@@ -177,18 +174,6 @@ def build_network(nodes_heirarchy, all_nodes, network_depth, complete_adjacency_
             edge_weights = nx.get_edge_attributes(sub_G,'weight').values()
             sub_pos = nx.circular_layout(sub_G)  
             nx.draw(sub_G, sub_pos, node_color=node_color_values, cmap=node_cmap, edge_cmap=edge_cmap, edge_color= edge_colors, width= list(edge_weights), connectionstyle='arc3, rad = 0.1', with_labels=True)
-    # for node1 in all_nodes:
-    #     for node2 in all_nodes:
-    #         node1_label = node1.get("label")
-    #         node2_label = node2.get("label")
-    #         edge_weight = complete_adjacency_matrix.loc[node1_label,node2_label]
-    #         if (node1['type'] == node2['type'] and not math.isnan(edge_weight)):
-    #             has_same_level_graphs = True
-    
-    if has_same_level_graphs:
-        plt.figure(2)
-        interGraph = nx.cycle_graph(4)
-        nx.draw(interGraph)
 
     #storing data in a json for d3
     data = json_graph.node_link_data(G)
