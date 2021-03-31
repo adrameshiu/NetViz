@@ -7,6 +7,16 @@ Weights and signs will be respected.
 
 ## Usage
 
+## Activate Virtual Environment
+- A virtual environment `netviz-venv` has been created to overcome any dependency issues.
+- To activate this virtual environment, use the command 
+
+```
+netviz-venv\Scripts\activate.bat
+```
+
+> Was created with the command  `python -m venv netviz-venv` 
+
 ### Node Definition 
 
 - Define the nodes that are required in the graph(along with the type/level of node) in a JSON file under the path `datafiles/nodes.json`

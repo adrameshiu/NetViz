@@ -6,6 +6,8 @@ from pprint import pprint
 import math
 import pandas as pd
 from networkx.readwrite import json_graph
+from networkx.drawing.nx_agraph import to_agraph
+import graphviz
 
 ###
 #Parse the nodes json under 'datafiles/nodes.json' that contains infromation of the level name and nodes in each level
@@ -175,11 +177,20 @@ def build_network(nodes_heirarchy, all_nodes, network_depth, complete_adjacency_
             sub_pos = nx.circular_layout(sub_G)  
             nx.draw(sub_G, sub_pos, node_color=node_color_values, cmap=node_cmap, edge_cmap=edge_cmap, edge_color= edge_colors, width= list(edge_weights), connectionstyle='arc3, rad = 0.1', with_labels=True)
 
+    ###FINDING SELF LOOPS
+    print(list(nx.selfloop_edges(sub_G)))
+    print(list(nx.selfloop_edges(sub_G, keys=True, data=True)))
     #storing data in a json for d3
     data = json_graph.node_link_data(G)
+
+
     with open('graph_out.json', 'w') as f:
         json.dump(data, f, indent=4)
 
+    # #drawing with graphviz
+    # A = to_agraph(sub_G)
+    # A.layout('dot')
+    # A.draw('test.png')
 #     open window to show plot
     plt.show()
 
