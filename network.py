@@ -95,6 +95,11 @@ def get_weights_from_file(edge_files_list, all_nodes):
 ###
 def build_network(nodes_heirarchy, all_nodes, network_depth, complete_adjacency_matrix, height, width, node_cmap, edge_cmap):
 
+    positive_sign_color = '#add8e6'
+    negative_sign_color = '#ff80ff'
+    node_color = '#C0C0C0'
+
+
     nodes_heirarchy = get_node_positions(nodes_heirarchy=nodes_heirarchy,network_depth=network_depth, height=height, width=width)
     
     pprint(all_nodes)
@@ -110,7 +115,7 @@ def build_network(nodes_heirarchy, all_nodes, network_depth, complete_adjacency_
     
     node_color_values= []
     for node in G.nodes():
-        node_color_values.append(1) #color scale value for nodes set to max
+        node_color_values.append(node_color) #color scale value for nodes set to max
 
     node_colors= nx.get_node_attributes(G,'color').values()
     node_pos= nx.get_node_attributes(G,'pos')
@@ -123,8 +128,8 @@ def build_network(nodes_heirarchy, all_nodes, network_depth, complete_adjacency_
             edge_weight = complete_adjacency_matrix.loc[node1_label,node2_label]
             if not math.isnan(edge_weight): #if there is a value in the complete adj matrix for the edge
                 edge_sign = '+' if edge_weight >=0 else '-'
-                #edge_color = 'b' if edge_sign == '+' else "g"
-                edge_color = 0.8 if edge_sign == '+' else 1
+                edge_color = positive_sign_color if edge_sign == '+' else negative_sign_color
+                #edge_color = 0.8 if edge_sign == '+' else 1
                 abs_edge_weight = abs(edge_weight)
                 G.add_edge(node1_label,node2_label,color=edge_color, weight=abs_edge_weight, alpha=0.5)
             
@@ -160,15 +165,15 @@ def build_network(nodes_heirarchy, all_nodes, network_depth, complete_adjacency_
                         has_same_level_graphs = True
                     
                     edge_sign = '+' if edge_weight >=0 else '-'
-                    #edge_color = 'b' if edge_sign == '+' else "g"
-                    edge_color = 0.8 if edge_sign == '+' else 1
+                    edge_color = positive_sign_color if edge_sign == '+' else negative_sign_color
+                    #edge_color = 0.8 if edge_sign == '+' else 1
                     abs_edge_weight = abs(edge_weight)
                     sub_G.add_edge(node1,node2,color=edge_color, weight=abs_edge_weight, alpha=0.5)
 
         if has_same_level_graphs:
             node_color_values= []
             for node in sub_G.nodes():
-                node_color_values.append(1) #color scale value for nodes set to max
+                node_color_values.append(node_color) #color scale value for nodes set to max
 
             node_colors= nx.get_node_attributes(sub_G,'color').values()
             node_pos= nx.get_node_attributes(sub_G,'pos')
