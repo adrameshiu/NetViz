@@ -70,13 +70,16 @@ def get_weights_from_file(edge_files_list, all_nodes):
     
     for edge_section in edge_files_list:
         file_path = edge_section['path'] 
-        from_section_label = edge_section['from']
-        to_section_label = edge_section['to']
+        from_section_label = edge_section['columns_section']
+        to_section_label = edge_section['rows_section']
         
         from_nodes_labels = [node['label'] for node in all_nodes if node['type']==from_section_label]
         to_nodes_labels = [node['label'] for node in all_nodes if node['type']==to_section_label]
   
         file_adj_weights = np.loadtxt(file_path,dtype=float)
+        print(from_nodes_labels)
+        print(to_nodes_labels)
+        pprint(file_adj_weights)
         file_df = pd.DataFrame(file_adj_weights, columns=from_nodes_labels, index=to_nodes_labels)
 
         for from_node in from_nodes_labels:
