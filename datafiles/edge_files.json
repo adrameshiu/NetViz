@@ -1,0 +1,5 @@
+[
+{"path":"datafiles/weights/sensorweights.dat", "from":"inter","to":"sensory"},
+{"path":"datafiles/weights/interweights.dat", "from":"inter","to":"inter"},
+{"path":"datafiles/weights/motorweights.dat", "from":"motor","to":"inter"}
+]

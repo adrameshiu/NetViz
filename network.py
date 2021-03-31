@@ -5,7 +5,11 @@ import json
 from pprint import pprint
 import math
 import pandas as pd
+from networkx.readwrite import json_graph
 
+'''
+Parse the nodes json under 'datafiles/nodes.json' that contains infromation of the level name and nodes in each level
+'''
 def parse_nodes_json(nodes_json):
     level = 0
     network_depth = len(nodes_json)
@@ -25,6 +29,10 @@ def parse_nodes_json(nodes_json):
         level = level + 1
     return nodes_heirarchy, all_nodes, network_depth
 
+'''
+Parse the options json under 'settings/options.json' that contains infromation about the different setting options like height and width between 
+two nodes
+'''
 def parse_options_json(options_json):
     node_cmap = options_json["node_cmap"] if "node_cmap" in options_json else plt.cm.Greens #setting default value
     edge_cmap = options_json["edge_cmap"] if "edge_cmap" in options_json else plt.cm.Set2
@@ -33,7 +41,12 @@ def parse_options_json(options_json):
 
     return node_cmap, edge_cmap, height, width
 
-
+'''
+Using the levels of each section of nodes, and the height and width from settings, 
+find the position of each node in terms of x and y co ordinates and add them to the 'pos' key of each node
+The middle section will be centered at y=0 and the layers above and below will be incremented by the height paramter
+The middle node of each section will be centered at x=0 and the nodes to the left and right will be incremented by the width paramter
+'''
 def get_node_positions(nodes_heirarchy, network_depth, height=10, width=10):
     origin_level = math.floor(network_depth/2)
     for h in range(0,len(nodes_heirarchy)) :
@@ -46,6 +59,10 @@ def get_node_positions(nodes_heirarchy, network_depth, height=10, width=10):
     return nodes_heirarchy
 
 
+'''
+Use the 'datafiles/edge_files.json' to find the path to the *.dat files 
+that contain the path to the edges defined along with their from and to sections they connect. 
+'''
 def get_weights_from_file(edge_files_list, all_nodes):
     all_labels = [node['label'] for node in all_nodes]
     complete_adjacency_matrix =  pd.DataFrame(columns=all_labels, index=all_labels)
@@ -67,6 +84,9 @@ def get_weights_from_file(edge_files_list, all_nodes):
 
     return complete_adjacency_matrix
 
+'''
+Build and visualize the network based on the nodes and edges
+'''
 def build_network(nodes_heirarchy, all_nodes, network_depth, complete_adjacency_matrix, height, width, node_cmap, edge_cmap):
 
     nodes_heirarchy = get_node_positions(nodes_heirarchy=nodes_heirarchy,network_depth=network_depth, height=height, width=width)
@@ -106,11 +126,23 @@ def build_network(nodes_heirarchy, all_nodes, network_depth, complete_adjacency_
 
     #draw networkx map
     nx.draw(G, pos=node_pos, node_color=node_color_values, cmap=node_cmap, edge_cmap=edge_cmap, edge_color= edge_colors,width= list(edge_weights), with_labels=True)
-    #open window to show plot
+    # nx.draw_networkx_edges(
+    #     G, node_pos,
+    #     connectionstyle="'arc3, rad = 840"  # <-- THIS IS IT
+    # )
+
+    #storing data in a json for d3
+    data = json_graph.node_link_data(G)
+    with open('graph_out.json', 'w') as f:
+        json.dump(data, f, indent=4)
+
+#     open window to show plot
     plt.show()
 
 
-# MAIN
+''''
+MAIN FUNCTION
+''''
 def main():
     with open('datafiles/nodes.json') as json_file:
         node_def = json.load(json_file)
