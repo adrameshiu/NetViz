@@ -5,6 +5,24 @@ Visualize neural networks into a hierarchical graph using NetworkX.
 
 Weights and signs will be respected.
 
+
+
+## Motivation
+
+While analyzing a neuron network layout, to fully comprehend the network, it is important to segregate the source, interneurons and target neurons. Another thing of importance is the direction and sign of the weights of the synapses. 
+
+Additionally, we might have connections within the interneurons themselves.
+
+This is just a small tool to read a set of neurons, respect the neuron and synapse definitions and show them on a network whose edges are proportional to the weights and are colored based on the signs of the weights.
+
+
+
+## Screenshots
+
+![Network Hierarchy](/screenshots/network.JPG)
+
+![Inter Neurons](/screenshots/inter_neuron.JPG)
+
 ## Usage
 
 ## Activate Virtual Environment
@@ -48,12 +66,8 @@ netviz-venv\Scripts\activate.bat
 
 ## Scope
 
-There are still complications where the edges between nodes of the same section are just shown as linear lines along the X axis which are pointless.
+The layouts can also be organized by using the multi-patriate layouts in networkx.
 
-This can be overcome by using arc's and representing the networkx graph(exported to a json file) on a D3.js graph. 
+## Credits
 
-## Useful Links
-
-https://www.d3-graph-gallery.com/graph/arc_template.html
-
-https://andrewmellor.co.uk/blog/articles/2014/12/14/d3-networks/
+The entire project was done under the guidance of Professor Eduardo J Izquierdo at Indiana University Bloomington. I hope that I could be as lively, enthusiastic, and energetic as him in the projects I get to work on. None of this would have been possible if not for his support, ideas, patience and freedom given. Thank You!
